@@ -1175,7 +1175,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n  \"name\": \"John\"\r\n}\r\n",
+											"raw": "",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -1183,7 +1183,7 @@
 											}
 										},
 										"url": {
-											"raw": "http://localhost:8085/employee",
+											"raw": "http://localhost:8085/employee?name=John",
 											"protocol": "http",
 											"host": [
 												"localhost"
@@ -1191,6 +1191,12 @@
 											"port": "8085",
 											"path": [
 												"employee"
+											],
+											"query": [
+												{
+													"key": "name",
+													"value": "John"
+												}
 											]
 										}
 									},
@@ -1199,7 +1205,134 @@
 							]
 						},
 						{
-							"name": "KO - Find employee - User",
+							"name": "KO - Find employee by name - Admin",
+							"item": [
+								{
+									"name": "GetToken Admin",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var jsonData = JSON.parse(responseBody);\r",
+													"pm.globals.set(\"admin_token\", \"Bearer \" + jsonData.token);\r",
+													"\r",
+													"pm.test(\"Token not null\", function () {\r",
+													"    const jsonData = pm.response.json(); \r",
+													"    pm.expect(jsonData.token).not.null; \r",
+													"});\r",
+													"\r",
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200); \r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"email\" : \"admi.gespyme@gmail.com\",\r\n    \"password\" : \"admin-gespyme-2024-99Pabcde\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8082/login",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8082",
+											"path": [
+												"login"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "FindEmployee",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"pm.request.headers.add({\r",
+													"    key: 'Authorization',\r",
+													"    value: 'Bearer ' + pm.environment.get(\"token\")\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200); \r",
+													"});\r",
+													"\r",
+													"pm.test(\"Empty response\", function () {\r",
+													"    const jsonData = pm.response.json(); \r",
+													"    pm.expect(jsonData).to.be.empty; \r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "{{admin_token}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8085/employee?name=ANY",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8085",
+											"path": [
+												"employee"
+											],
+											"query": [
+												{
+													"key": "name",
+													"value": "ANY"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "OK - Find employee - User",
 							"item": [
 								{
 									"name": "GetToken User",
@@ -1270,8 +1403,8 @@
 											"script": {
 												"exec": [
 													"\r",
-													"pm.test(\"Status code is 403\", function () {\r",
-													"    pm.response.to.have.status(403); \r",
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200); \r",
 													"});"
 												],
 												"type": "text/javascript"
@@ -1432,6 +1565,133 @@
 							]
 						},
 						{
+							"name": "KO - Find employee by address - Admin",
+							"item": [
+								{
+									"name": "GetToken Admin",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var jsonData = JSON.parse(responseBody);\r",
+													"pm.globals.set(\"admin_token\", \"Bearer \" + jsonData.token);\r",
+													"\r",
+													"pm.test(\"Token not null\", function () {\r",
+													"    const jsonData = pm.response.json(); \r",
+													"    pm.expect(jsonData.token).not.null; \r",
+													"});\r",
+													"\r",
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200); \r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"email\" : \"admi.gespyme@gmail.com\",\r\n    \"password\" : \"admin-gespyme-2024-99Pabcde\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8082/login",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8082",
+											"path": [
+												"login"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "FindEmployee",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"pm.request.headers.add({\r",
+													"    key: 'Authorization',\r",
+													"    value: 'Bearer ' + pm.environment.get(\"token\")\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200); \r",
+													"});\r",
+													"\r",
+													"pm.test(\"Empty response\", function () {\r",
+													"    const jsonData = pm.response.json(); \r",
+													"    pm.expect(jsonData).to.be.empty; \r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "{{admin_token}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"address\": \"10 Downing Street, London, SW1A 2AA, United Kingdom\"\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8085/employee?address=ANY",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8085",
+											"path": [
+												"employee"
+											],
+											"query": [
+												{
+													"key": "address",
+													"value": "ANY"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
 							"name": "OK - Find employee by lastName - Admin",
 							"item": [
 								{
@@ -1524,7 +1784,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n  \"lastName\" : \"Doe Doe\"\r\n}\r\n",
+											"raw": "",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -1532,7 +1792,7 @@
 											}
 										},
 										"url": {
-											"raw": "http://localhost:8085/employee",
+											"raw": "http://localhost:8085/employee?lastName=Doe",
 											"protocol": "http",
 											"host": [
 												"localhost"
@@ -1540,6 +1800,139 @@
 											"port": "8085",
 											"path": [
 												"employee"
+											],
+											"query": [
+												{
+													"key": "lastName",
+													"value": "Doe"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "KO - Find employee by lastName - Admin",
+							"item": [
+								{
+									"name": "GetToken Admin",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var jsonData = JSON.parse(responseBody);\r",
+													"pm.globals.set(\"admin_token\", \"Bearer \" + jsonData.token);\r",
+													"\r",
+													"pm.test(\"Token not null\", function () {\r",
+													"    const jsonData = pm.response.json(); \r",
+													"    pm.expect(jsonData.token).not.null; \r",
+													"});\r",
+													"\r",
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200); \r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"email\" : \"admi.gespyme@gmail.com\",\r\n    \"password\" : \"admin-gespyme-2024-99Pabcde\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8082/login",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8082",
+											"path": [
+												"login"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "FindEmployee",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"pm.request.headers.add({\r",
+													"    key: 'Authorization',\r",
+													"    value: 'Bearer ' + pm.environment.get(\"token\")\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200); \r",
+													"});\r",
+													"\r",
+													"pm.test(\"Empty response\", function () {\r",
+													"    const jsonData = pm.response.json(); \r",
+													"    pm.expect(jsonData).to.be.empty; \r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "{{admin_token}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8085/employee?lastName=ANY",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8085",
+											"path": [
+												"employee"
+											],
+											"query": [
+												{
+													"key": "lastName",
+													"value": "ANY"
+												}
 											]
 										}
 									},
@@ -1620,6 +2013,135 @@
 												"exec": [
 													"pm.test(\"Status code is 200\", function () {\r",
 													"    pm.response.to.have.status(200); \r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "{{admin_token}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"socialSecurityNumber\": \"XXXXXXXXXX\"\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8085/employee?socialSecurityNumber=XXXXXXXXXX",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8085",
+											"path": [
+												"employee"
+											],
+											"query": [
+												{
+													"key": "socialSecurityNumber",
+													"value": "XXXXXXXXXX"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "KO - Find employee by socialSecurityNumber - Admin Copy",
+							"item": [
+								{
+									"name": "GetToken Admin",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var jsonData = JSON.parse(responseBody);\r",
+													"pm.globals.set(\"admin_token\", \"Bearer \" + jsonData.token);\r",
+													"\r",
+													"pm.test(\"Token not null\", function () {\r",
+													"    const jsonData = pm.response.json(); \r",
+													"    pm.expect(jsonData.token).not.null; \r",
+													"});\r",
+													"\r",
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200); \r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"email\" : \"admi.gespyme@gmail.com\",\r\n    \"password\" : \"admin-gespyme-2024-99Pabcde\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8082/login",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8082",
+											"path": [
+												"login"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "FindEmployee",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"pm.request.headers.add({\r",
+													"    key: 'Authorization',\r",
+													"    value: 'Bearer ' + pm.environment.get(\"token\")\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200); \r",
+													"});\r",
+													"\r",
+													"pm.test(\"Empty response\", function () {\r",
+													"    const jsonData = pm.response.json(); \r",
+													"    pm.expect(jsonData).to.be.empty; \r",
 													"});"
 												],
 												"type": "text/javascript"
@@ -1648,7 +2170,7 @@
 											}
 										},
 										"url": {
-											"raw": "http://localhost:8085/employee",
+											"raw": "http://localhost:8085/employee?socialSecurityNumber=ANY",
 											"protocol": "http",
 											"host": [
 												"localhost"
@@ -1656,6 +2178,12 @@
 											"port": "8085",
 											"path": [
 												"employee"
+											],
+											"query": [
+												{
+													"key": "socialSecurityNumber",
+													"value": "ANY"
+												}
 											]
 										}
 									},
@@ -1764,7 +2292,7 @@
 											}
 										},
 										"url": {
-											"raw": "http://localhost:8085/employee",
+											"raw": "http://localhost:8085/employee?idNumber=00000000P",
 											"protocol": "http",
 											"host": [
 												"localhost"
@@ -1772,6 +2300,139 @@
 											"port": "8085",
 											"path": [
 												"employee"
+											],
+											"query": [
+												{
+													"key": "idNumber",
+													"value": "00000000P"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "KO - Find employee by idNumber - Admin",
+							"item": [
+								{
+									"name": "GetToken Admin",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var jsonData = JSON.parse(responseBody);\r",
+													"pm.globals.set(\"admin_token\", \"Bearer \" + jsonData.token);\r",
+													"\r",
+													"pm.test(\"Token not null\", function () {\r",
+													"    const jsonData = pm.response.json(); \r",
+													"    pm.expect(jsonData.token).not.null; \r",
+													"});\r",
+													"\r",
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200); \r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"email\" : \"admi.gespyme@gmail.com\",\r\n    \"password\" : \"admin-gespyme-2024-99Pabcde\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8082/login",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8082",
+											"path": [
+												"login"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "FindEmployee",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"pm.request.headers.add({\r",
+													"    key: 'Authorization',\r",
+													"    value: 'Bearer ' + pm.environment.get(\"token\")\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200); \r",
+													"});\r",
+													"\r",
+													"pm.test(\"Empty response\", function () {\r",
+													"    const jsonData = pm.response.json(); \r",
+													"    pm.expect(jsonData).to.be.empty; \r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "{{admin_token}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"idNumber\": \"00000000P\"\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8085/employee?idNumber=ANY",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8085",
+											"path": [
+												"employee"
+											],
+											"query": [
+												{
+													"key": "idNumber",
+													"value": "ANY"
+												}
 											]
 										}
 									},
@@ -1896,6 +2557,133 @@
 							]
 						},
 						{
+							"name": "KO - Find customer by mobile - Admin",
+							"item": [
+								{
+									"name": "GetToken Admin",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var jsonData = JSON.parse(responseBody);\r",
+													"pm.globals.set(\"admin_token\", \"Bearer \" + jsonData.token);\r",
+													"\r",
+													"pm.test(\"Token not null\", function () {\r",
+													"    const jsonData = pm.response.json(); \r",
+													"    pm.expect(jsonData.token).not.null; \r",
+													"});\r",
+													"\r",
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200); \r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"email\" : \"admi.gespyme@gmail.com\",\r\n    \"password\" : \"admin-gespyme-2024-99Pabcde\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8082/login",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8082",
+											"path": [
+												"login"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "FindEmployee",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"pm.request.headers.add({\r",
+													"    key: 'Authorization',\r",
+													"    value: 'Bearer ' + pm.environment.get(\"token\")\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200); \r",
+													"});\r",
+													"\r",
+													"pm.test(\"Empty response\", function () {\r",
+													"    const jsonData = pm.response.json(); \r",
+													"    pm.expect(jsonData).to.be.empty; \r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "{{admin_token}}",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"mobilePhone\": \"000 00 00 00\"\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8085/employee?mobilePhone=ANY",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8085",
+											"path": [
+												"employee"
+											],
+											"query": [
+												{
+													"key": "mobilePhone",
+													"value": "ANY"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
 							"name": "OK - Find customer by various filters - Admin",
 							"item": [
 								{
@@ -1996,7 +2784,7 @@
 											}
 										},
 										"url": {
-											"raw": "http://localhost:8085/employee",
+											"raw": "http://localhost:8085/employee?name=John&email=johndoedoe@example.com",
 											"protocol": "http",
 											"host": [
 												"localhost"
@@ -2004,6 +2792,16 @@
 											"port": "8085",
 											"path": [
 												"employee"
+											],
+											"query": [
+												{
+													"key": "name",
+													"value": "John"
+												},
+												{
+													"key": "email",
+													"value": "johndoedoe@example.com"
+												}
 											]
 										}
 									},
@@ -2847,7 +3645,7 @@
 					"name": "GetById",
 					"item": [
 						{
-							"name": "KO - GetById - User",
+							"name": "OK - GetById - User",
 							"item": [
 								{
 									"name": "GetToken User",
@@ -2917,8 +3715,8 @@
 											"listen": "test",
 											"script": {
 												"exec": [
-													"pm.test(\"Status code is 403\", function () {\r",
-													"    pm.response.to.have.status(403); \r",
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200); \r",
 													"});\r",
 													"\r",
 													""

@@ -38,7 +38,7 @@ public class EmployeeController {
     }
 
     @GetMapping
-    public ResponseEntity<List<EmployeeModelApi>> findEmployees(@RequestBody EmployeeFilterModelApi employeeFilterModelApi) {
+    public ResponseEntity<List<EmployeeModelApi>> findEmployees(EmployeeFilterModelApi employeeFilterModelApi) {
         validator.validate(employeeFilterModelApi, List.of(Validator.ONE_PARAM_NOT_NULL));
         EmployeeFilter employeeFilter = employeeMapper.map(employeeFilterModelApi);
         List<Employee> employees = findEmployeesUseCase.findEmployee(employeeFilter);
